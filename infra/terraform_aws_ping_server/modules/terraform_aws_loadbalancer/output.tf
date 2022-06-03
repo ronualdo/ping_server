@@ -7,3 +7,8 @@ output "dns_name" {
   description = "loadbalancer dns name"
   value = aws_alb.ping_server_loadbalancer.dns_name
 }
+
+output "loadbalancer_security_group_id" {
+  description = ""
+  value = aws_security_group.loadbalancer.id
+}

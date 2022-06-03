@@ -64,25 +64,13 @@ resource "aws_security_group" "ping_server" {
   name = "ping-server"
   vpc_id = var.vpc_id
   
+  # ingress rule of instance allows the load balancer to hit on any port of the instances
+  # because each time container got diff port. So we can’t decide which ports the new container holds
   ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port = 4567
-    to_port = 4567
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port = 443
-    to_port = 443
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    security_groups = [var.loadbalancer_security_group_id]
   }
   
   egress {

@@ -23,4 +23,5 @@ module "terraform_aws_service" {
   target_group_arn = module.terraform_aws_loadbalancer.default_target_group_arn
   vpc_id = module.terraform_aws_network.main_vpc_id
   autoscaling_group_vpc_zone_identifier = module.terraform_aws_network.public_subnet_ids
+  loadbalancer_security_group_id = module.terraform_aws_loadbalancer.loadbalancer_security_group_id
 }

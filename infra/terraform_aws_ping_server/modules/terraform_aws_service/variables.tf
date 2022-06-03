@@ -21,3 +21,9 @@ variable "autoscaling_group_vpc_zone_identifier" {
   type = list(string)
   sensitive = false
 }
+
+variable "loadbalancer_security_group_id" {
+  description = "loadbalancer security group id"
+  type = string
+  sensitive = false
+}
