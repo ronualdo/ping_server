@@ -45,7 +45,6 @@ resource "aws_launch_configuration" "ecs_launch_config" {
   security_groups = [aws_security_group.ping_server.id]
   user_data = "#!/bin/bash\necho ECS_CLUSTER=ping-server-cluster >> /etc/ecs/ecs.config"
   instance_type = "t2.micro"
-  associate_public_ip_address = true
 }
 
 resource "aws_autoscaling_group" "failure_analysis_ecs_asg" {
@@ -65,34 +64,27 @@ resource "aws_security_group" "ping_server" {
   name = "ping-server"
   vpc_id = var.vpc_id
   
-  # ingress {
-  #   from_port = 22
-  #   to_port = 22
-  #   protocol = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-
-  # ingress {
-  #   from_port = 4567
-  #   to_port = 4567
-  #   protocol = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-
-  # ingress {
-  #   from_port = 443
-  #   to_port = 443
-  #   protocol = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-  #
   ingress {
-    from_port = 0
-    to_port = 65535
+    from_port = 22
+    to_port = 22
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port = 4567
+    to_port = 4567
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
   egress {
     from_port = 0
     to_port = 65535
