@@ -2,6 +2,10 @@ resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/20"
   enable_dns_support = true
   enable_dns_hostnames = true
+
+  tags = {
+    name = "ping-server-vpc"
+  }
 }
 
 resource "aws_subnet" "pub_subnet1" {

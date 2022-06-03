@@ -39,15 +39,17 @@ data "aws_ami" "default" {
 }
 
 resource "aws_launch_configuration" "ecs_launch_config" {
+  name_prefix="ping-server"
   image_id = data.aws_ami.default.id
   iam_instance_profile = aws_iam_instance_profile.ecs_agent.name
   security_groups = [aws_security_group.ping_server.id]
   user_data = "#!/bin/bash\necho ECS_CLUSTER=ping-server-cluster >> /etc/ecs/ecs.config"
   instance_type = "t2.micro"
+  associate_public_ip_address = true
 }
 
 resource "aws_autoscaling_group" "failure_analysis_ecs_asg" {
-  name  = "asg"
+  name  = "ping-server"
   vpc_zone_identifier = var.autoscaling_group_vpc_zone_identifier
   launch_configuration = aws_launch_configuration.ecs_launch_config.name
 
@@ -60,25 +62,33 @@ resource "aws_autoscaling_group" "failure_analysis_ecs_asg" {
 # AUTOSCALING GROUP
 
 resource "aws_security_group" "ping_server" {
+  name = "ping-server"
   vpc_id = var.vpc_id
   
-  ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # ingress {
+  #   from_port = 22
+  #   to_port = 22
+  #   protocol = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
 
-  ingress {
-    from_port = 4567
-    to_port = 4567
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # ingress {
+  #   from_port = 4567
+  #   to_port = 4567
+  #   protocol = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
 
+  # ingress {
+  #   from_port = 443
+  #   to_port = 443
+  #   protocol = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
+  #
   ingress {
-    from_port = 443
-    to_port = 443
+    from_port = 0
+    to_port = 65535
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
